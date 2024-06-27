@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Detection</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function handleFileInput(event) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/upload');
+      xhr.onload = function() {
+        console.log(xhr.responseText);
+      };
+      xhr.send(formData);
+    }
+
+    socket.on('detection-output', (data) => {
+      // display output to the user
+      console.log(data);
+    });
+
+    socket.on('detection-complete', () => {
+      // alert the user that detection is complete
+      alert('Detection complete!');
+    });
+  </script>
+</head>
+<body>
+  <h1>File Detection</h1>
+  <input type="file" accept=".jpg,.jpeg,.png" onchange="handleFileInput(event)">
+</body>
+</html>
